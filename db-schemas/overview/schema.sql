@@ -50,3 +50,16 @@ CREATE TABLE IF NOT EXISTS skus (
   size VARCHAR(10),
   quantity SMALLINT
 );
+
+-- commands ran for ETL:
+COPY products FROM '/Users/foxinator/Documents/Hack Reactor Coursework/sdc csv files/product.csv' DELIMITER',' CSV HEADER;
+
+COPY styles FROM '/Users/foxinator/Documents/Hack Reactor Coursework/sdc csv files/styles.csv' DELIMITER',' CSV HEADER;
+
+COPY photos FROM '/Users/foxinator/Documents/Hack Reactor Coursework/sdc csv files/photos.csv' DELIMITER',' CSV HEADER;
+
+COPY related FROM '/Users/foxinator/Documents/Hack Reactor Coursework/sdc csv files/related.csv' DELIMITER',' CSV HEADER;
+
+COPY features FROM '/Users/foxinator/Documents/Hack Reactor Coursework/sdc csv files/features.csv' DELIMITER',' CSV HEADER;
+
+COPY skus FROM '/Users/foxinator/Documents/Hack Reactor Coursework/sdc csv files/skus.csv' DELIMITER',' CSV HEADER;
