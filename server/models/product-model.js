@@ -28,28 +28,27 @@ module.exports = {
     });
   },
   getProductDB(productID, callback) {
-    client.query('SELECT products.*, features.feature, features.val FROM products JOIN features ON products.id = features.product_id WHERE products.id = $1', [productID], (err, result) => {
+    client.query(`SELECT
+    products.id,
+    products.product_name AS "name",
+    products.slogan,
+    products.prod_description AS "description",
+    products.category,
+    products.default_price,
+    (
+      SELECT json_agg(nested_features) FROM
+      (
+        SELECT
+        features.feature,
+        features.val AS value
+        FROM features WHERE features.product_id = products.id
+      ) AS nested_features
+    ) AS features
+    FROM products WHERE products.id = $1`, [productID], (err, result) => {
       if (err) {
-        console.log('there was an error', err);
         callback(err);
       } else {
-        const queryResult = {
-          id: result.rows[0].id,
-          name: result.rows[0].product_name,
-          slogan: result.rows[0].slogan,
-          description: result.rows[0].prod_description,
-          category: result.rows[0].category,
-          default_price: result.rows[0].default_price,
-          features: [],
-        };
-        result.rows.forEach((entry) => {
-          const oneFeature = {
-            feature: entry.feature,
-            val: entry.val,
-          };
-          queryResult.features.push(oneFeature);
-        });
-        callback(null, queryResult);
+        callback(null, result.rows[0]);
       }
     });
   },
