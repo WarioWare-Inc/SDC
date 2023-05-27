@@ -53,18 +53,15 @@ CREATE TABLE IF NOT EXISTS skus (
 
 -- commands ran for ETL:
 COPY products FROM '/Users/foxinator/Documents/Hack Reactor Coursework/sdc csv files/product.csv' DELIMITER',' CSV HEADER;
-
 COPY styles FROM '/Users/foxinator/Documents/Hack Reactor Coursework/sdc csv files/styles.csv' DELIMITER',' CSV HEADER;
-
 COPY photos FROM '/Users/foxinator/Documents/Hack Reactor Coursework/sdc csv files/photos.csv' DELIMITER',' CSV HEADER;
-
 COPY related FROM '/Users/foxinator/Documents/Hack Reactor Coursework/sdc csv files/related.csv' DELIMITER',' CSV HEADER;
-
 COPY features FROM '/Users/foxinator/Documents/Hack Reactor Coursework/sdc csv files/features.csv' DELIMITER',' CSV HEADER;
-
 COPY skus FROM '/Users/foxinator/Documents/Hack Reactor Coursework/sdc csv files/skus.csv' DELIMITER',' CSV HEADER;
 
 -- creating indexes
 CREATE INDEX related_current_id ON related(current_product_id);
 CREATE INDEX features_product_is ON features(product_id);
 CREATE INDEX photos_style_id ON photos(styleid);
+CREATE INDEX skus_style_id ON skus(styleId);
+CREATE INDEX styles_product_id ON styles(productId);

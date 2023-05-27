@@ -77,7 +77,7 @@ module.exports = {
         ) s
     ) AS skus
     FROM styles
-    WHERE styles.productid = $1;`, [productID], (err, result) => {
+    WHERE styles.productid = $1`, [productID], (err, result) => {
       if (err) {
         callback(err);
       } else {
