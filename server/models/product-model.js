@@ -15,7 +15,7 @@ module.exports = {
     products.prod_description AS "description",
     products.category,
     products.default_price
-    FROM products LIMIT = $1`, [limit], (err, result) => {
+    FROM products LIMIT $1`, [limit], (err, result) => {
       if (err) {
         callback(err);
       } else {
@@ -49,7 +49,35 @@ module.exports = {
     });
   },
   getStylesDB(productID, callback) {
-    client.query('SELECT styles.id AS style_id, styles.style_name AS "name", styles.original_price, styles.sale_price, styles.default_style AS "default?", (SELECT json_agg(nested_photos) FROM (SELECT photos.thumbnail_url, photos.photo_url AS url FROM photos WHERE photos.styleid = styles.id) AS nested_photos) AS photos, (SELECT json_object_agg(nested_skus.id, nested_skus) FROM (SELECT skus.id, skus.quantity, skus.size FROM skus WHERE skus.styleid = styles.id) AS nested_skus) AS skus FROM styles WHERE styles.productid = $1', [productID], (err, result) => {
+    client.query(`SELECT
+    styles.id AS style_id,
+    styles.style_name AS "name",
+    styles.original_price,
+    styles.sale_price,
+    styles.default_style AS "default?",
+    (
+      SELECT json_agg(json_build_object('thumbnail_url', p.thumbnail_url, 'url', p.photo_url))
+        FROM (
+            SELECT DISTINCT ON (photos.thumbnail_url, photos.photo_url)
+                photos.thumbnail_url,
+                photos.photo_url
+            FROM photos
+            WHERE photos.styleid = styles.id
+        ) p
+    ) AS photos,
+    (
+      SELECT json_object_agg(s.id, json_build_object('quantity', s.quantity, 'size', s.size))
+        FROM (
+            SELECT DISTINCT ON (skus.id)
+                skus.id,
+                skus.quantity,
+                skus.size
+            FROM skus
+            WHERE skus.styleid = styles.id
+        ) s
+    ) AS skus
+    FROM styles
+    WHERE styles.productid = $1;`, [productID], (err, result) => {
       if (err) {
         callback(err);
       } else {

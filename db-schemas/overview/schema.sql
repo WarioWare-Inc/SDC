@@ -63,3 +63,8 @@ COPY related FROM '/Users/foxinator/Documents/Hack Reactor Coursework/sdc csv fi
 COPY features FROM '/Users/foxinator/Documents/Hack Reactor Coursework/sdc csv files/features.csv' DELIMITER',' CSV HEADER;
 
 COPY skus FROM '/Users/foxinator/Documents/Hack Reactor Coursework/sdc csv files/skus.csv' DELIMITER',' CSV HEADER;
+
+-- creating indexes
+CREATE INDEX related_current_id ON related(current_product_id);
+CREATE INDEX features_product_is ON features(product_id);
+CREATE INDEX photos_style_id ON photos(styleid);
