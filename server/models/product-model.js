@@ -6,10 +6,6 @@ const client = new Client({
 });
 client.connect();
 
-const {
-  testProducts, testProduct, testStyles, testRelated,
-} = require('./example-data');
-
 module.exports = {
   getProductsDB(callback, limit = 5) {
     client.query(`SELECT
