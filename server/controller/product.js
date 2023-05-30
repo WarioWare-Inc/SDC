@@ -1,51 +1,71 @@
-const {
-  getProductsDB, getProductDB, getStylesDB, getRelatedDB,
-} = require('../models/product-model');
+const axios = require('axios');
 
 module.exports = {
   getProducts(req, res) {
-    getProductsDB((err, productsData) => {
-      if (err) {
-        res.status(500).send(err);
-      } else {
-        res.status(200).send(productsData);
-      }
-    });
+    const endpoint = 'https://app-hrsei-api.herokuapp.com/api/fec2/hr-rfp/products/';
+    const option = {
+      method: 'GET',
+      url: endpoint,
+      headers: {
+        Authorization: process.env.AUTH,
+      },
+    };
+    axios(option)
+      .then((result) => {
+        res.send(result.data);
+      })
+      .catch((err) => console.log('server: get products failed', err));
   },
 
   getProduct(req, res) {
     const { productId } = req.params;
-
-    getProductDB(productId, (err, productData) => {
-      if (err) {
-        res.status(500).send(err);
-      } else {
-        res.status(200).send(productData);
-      }
-    });
+    const endpoint = ` https://app-hrsei-api.herokuapp.com/api/fec2/hr-rfp/products/${productId}`;
+    const option = {
+      method: 'GET',
+      url: endpoint,
+      headers: {
+        Authorization: process.env.AUTH,
+      },
+    };
+    axios(option)
+      .then((result) => {
+        res.send(result.data);
+      })
+      .catch((err) => console.log('server: get product detail failed', err))
+      .finally(console.log('req params: ', req.params));
   },
 
   getProductStyle(req, res) {
     const { productId } = req.params;
-
-    getStylesDB(productId, (err, stylesData) => {
-      if (err) {
-        res.status(500).send(err);
-      } else {
-        res.status(200).send(stylesData);
-      }
-    });
+    const endpoint = `https://app-hrsei-api.herokuapp.com/api/fec2/hr-rfp/products/${productId}/styles`;
+    const option = {
+      method: 'GET',
+      url: endpoint,
+      headers: {
+        Authorization: process.env.AUTH,
+      },
+    };
+    axios(option)
+      .then((result) => {
+        res.send(result.data);
+      })
+      .catch((err) => console.log('server: get product style failed', err));
   },
 
   getRelated(req, res) {
     const { productId } = req.params;
-
-    getRelatedDB(productId, (err, relatedData) => {
-      if (err) {
-        res.status(500).send(err);
-      } else {
-        res.status(200).send(relatedData);
-      }
-    });
+    const endpoint = `https://app-hrsei-api.herokuapp.com/api/fec2/hr-rfp/products/${productId}/related`;
+    const option = {
+      method: 'GET',
+      url: endpoint,
+      headers: {
+        Authorization: process.env.AUTH,
+      },
+    };
+    axios(option)
+      .then((result) => {
+        res.send(result.data);
+      })
+      .catch((err) => console.log('server: get related list failed', err));
   },
 };
