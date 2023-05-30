@@ -3,31 +3,27 @@ import { sleep, check } from 'k6';
 
 export const options = {
   stages: [
-    { duration: '30s', target: 10 },
-    { duration: '30s', target: 20 },
-    { duration: '30s', target: 30 },
-    { duration: '30s', target: 40 },
-    { duration: '30s', target: 30 },
-    { duration: '30s', target: 20 },
-    { duration: '30s', target: 10 },
+    { duration: '1s', target: 600 },
+    { duration: '28s', target: 1500 },
+    { duration: '1s', target: 600 },
   ],
 };
 
-// // for testing /products endpoint:
+// for testing /products endpoint:
 // export default function () {
-//   const res = http.get('http://localhost:3000/products/40344');
+//   const res = http.get('http://localhost:3000/products/');
 //   check(res, { 'status was 200': (r) => r.status === 200 });
 //   sleep(1);
 // }
 
 // // for testing /products/:product_id endpoint:
-// export default function () {
-//   for (let i = 900000; i < 920000; i++) {
-//     const res = http.get(`http://localhost:3000/products/${i}`);
-//     check(res, { 'status was 200': (r) => r.status === 200 });
-//     sleep(1);
-//   }
-// }
+export default function () {
+  for (let i = 900000; i < 920000; i++) {
+    const res = http.get(`http://localhost:3000/products/${i}`);
+    check(res, { 'status was 200': (r) => r.status === 200 });
+    sleep(1);
+  }
+}
 
 // for testing /products/:product_id/styles endpoint:
 // export default function () {
