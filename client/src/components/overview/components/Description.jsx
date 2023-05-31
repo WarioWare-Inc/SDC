@@ -7,7 +7,7 @@ function Description({ productData, selectedStyle }) {
     if (selectedStyle) {
       setStyleName(selectedStyle.name);
     }
-    console.log('styleName: ', styleName);
+    // console.log('styleName: ', styleName);
   }, [selectedStyle, styleName]);
 
   return (
