@@ -2,7 +2,7 @@ const axios = require('axios');
 
 module.exports = {
   getQuestions(req, res) {
-    const endpoint = 'https://app-hrsei-api.herokuapp.com/api/fec2/hr-rfp/qa/questions';
+    const endpoint = 'http://54.67.64.166:3000/qa/questions';
     const option = {
       method: 'GET',
       url: endpoint,
@@ -22,7 +22,7 @@ module.exports = {
   },
 
   addQuestion(req, res) {
-    const endpoint = 'https://app-hrsei-api.herokuapp.com/api/fec2/hr-rfp/qa/questions';
+    const endpoint = 'http://54.67.64.166:3000/qa/questions';
     const option = {
       method: 'POST',
       url: endpoint,
@@ -42,7 +42,7 @@ module.exports = {
   },
 
   addAnswer(req, res) {
-    const endpoint = `https://app-hrsei-api.herokuapp.com/api/fec2/hr-rfp/qa/questions/${req.body.question_id}/answers`;
+    const endpoint = `http://54.67.64.166:3000/qa/questions/${req.body.question_id}/answers`;
     console.log(req.body.body)
     const option = {
       method: 'POST',
@@ -63,7 +63,7 @@ module.exports = {
   },
 
   markHelpfulQuestion(req, res) {
-    const endpoint = `https://app-hrsei-api.herokuapp.com/api/fec2/hr-rfp/qa/questions/${req.body.question_id}/helpful`;
+    const endpoint = `http://54.67.64.166:3000/qa/questions/${req.body.question_id}/helpful`;
     const option = {
       method: 'PUT',
       url: endpoint,
@@ -82,7 +82,7 @@ module.exports = {
   },
 
   markHelpfulAnswer(req, res) {
-    const endpoint = `https://app-hrsei-api.herokuapp.com/api/fec2/hr-rfp/qa/answers/${req.body.answer_id}/helpful`;
+    const endpoint = `http://54.67.64.166:3000/qa/answers/${req.body.answer_id}/helpful`;
     const option = {
       method: 'PUT',
       url: endpoint,
@@ -101,7 +101,7 @@ module.exports = {
   },
 
   reportAnswer(req, res) {
-    const endpoint = `https://app-hrsei-api.herokuapp.com/api/fec2/hr-rfp/qa/answers/${req.body.answer_id}/report`;
+    const endpoint = `http://54.67.64.166:3000/qa/answers/${req.body.answer_id}/report`;
     const option = {
       method: 'PUT',
       url: endpoint,
