@@ -1,264 +1,43 @@
-<a name="readme-top"></a>
+# Atelierex
 
-<div align="center" >
-  <a href="https://github.com/FEC-Pina-Fraise-Frivolities/Atelier">
-    <img src="images/logo.png" alt="Logo" width="80" height="80" style="border-radius: 50%">
-  </a>
-</div>
-<!-- TABLE OF CONTENTS -->
+## Overview
+**_Atelierex_** is an API built to support an existing e-commerce frontend. The goal was to replace an existing API ("Atelier") with a robust backend system that can support the full dataset of the project and can scale to meet the demands of production traffic.
 
-<details>
+## Task
+An explicit goal for this challenge was to replace an existing API - an implicit expectation was to create a **_better_** API. The rebuilt API needed to meet the following specifications:
+* Maximum latency of 2 seconds (2000 ms)
+* Minimum requests per second of 1000/second
+* Servers and Database deployed on separate EC2 instances
 
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#product-overview">Product Overview</a></li>
-        <li><a href="#related-items-and-outfit">Related Items and Outfit</a></li>
-        <li><a href="#questions-and-answers">Questions and Answers</a></li>
-        <li><a href="#ratings-and-reviews">Ratings and Reviews</a></li>
-      </ul>
-    </li>
-   <li><a href="#built-with">Built With</a></li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details>
+## Actions
+The following systems were implemented to build "Aterlierex":
+* Raw .csv data transferred to PostgreSQL database
+* Backend reconfigured with optimized queries for PostgreSQL database
+* Local query speed tested with K6
 
-# Pineapple Fields
-<!-- ABOUT THE PROJECT -->
-## About The Project
+| K6 Screenshot | Optimized Query Result |
+|---|---|
+| <img width="800" alt="k6 stress test" src="https://github.com/WarioWare-Inc/product-module/assets/106457612/0eb22903-d2ac-49d2-b194-56a558483e7d"> | Tested: 1500 VUs/30 seconds<br />Latency: 10.64 ms<br />Requests: 75,603 total, or 2,520.1/s |
 
-Hello, and welcome to your next e-commerce destination! This is a project developed by the Pina Fraise Frivolities Team to implement an e-commerce front-end that will give Amazon a run for it's money! The key features of this project include:
+* Deployed backend and database to separate EC2 instances through AWS
+* Tested response time through loader.io
 
-#### Product Overview
-[![Product Name Screen Shot][product-overview-screenshot]](https://github.com/FEC-Pina-Fraise-Frivolities/Atelier/)
+| Loader.io Screenshot | Post-Deployment |
+|---|---|
+| <img width="800" alt="Screenshot 2023-06-03 at 1 49 23 PM" src="https://github.com/WarioWare-Inc/product-module/assets/106457612/a796defb-d173-4c0c-a8a6-e4f7e49a467e"> | Tested: 1000 clients/30 seconds<br />Latency: 2809 ms<br />Requests: 18312 total, or 610.4/s |
 
-This component lists all of the information about your hot product. It features:
+* PROBLEM: Latency increased to 2809 ms
+* Deployed two additional EC2 instances of server and load balancer (NGINX) to lower latency to 61 ms while increasing client load to 2000 clients
 
-* A gallery with thumbnails and an expanded view for users to zoom in
-* A style selector that allows the customer to select from various product styles
-* Product category, name, and price that dynamically re-render on style selection
-* Product description and features
+| Loader.io Screenshot | Post-Load-Balancing |
+|---|---|
+| <img width="800" src=https://github.com/WarioWare-Inc/product-module/assets/106457612/8b76612b-ff92-4fb6-bdb4-3d4889c9f87b)> | Tested: 2000 clients/30 seconds<br />Latency: 61 ms<br />Requests: 59884 total, or 1996.1/s |
 
-#### Related Items and Outfit
-[![Related Items Screen Shot][related-items-screenshot]](https://github.com/FEC-Pina-Fraise-Frivolities/Atelier/)
+* Implemented caching (NGINX) to improve stability to allow for larger client load over narrow API endpoint range
 
-This component lists the related items and the outfit items. It features:
+| Loader.io Screenshot | Post-Caching |
+|---|---|
+| <img width="800" alt="Screenshot 2023-06-03 at 2 07 55 PM" src="https://github.com/WarioWare-Inc/product-module/assets/106457612/408d603b-c428-4c8d-897f-71705c30a331"> | Tested: 4000 clients/30 seconds<br />Latency: 62 ms<br />Requests: 119,770 total, or 3992.3/s |
 
-* Several photos of each product in the list
-* Navigate to other product by clicking the name in the card
-* Show the comparison table of current product and the product on the card
-* Edit the items in the outfit list
-
-#### Questions and Answers
-[![Questions and Answers Screen Shot][qs-and-as-screenshot]](https://github.com/FEC-Pina-Fraise-Frivolities/Atelier/)
-
-#### Ratings and Reviews
-[![Ratings and Reviews Screen Shot][ratings-and-reviews-screenshot]](https://github.com/FEC-Pina-Fraise-Frivolities/Atelier/)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-### Built With
-
-* [![React][React.js]][React-url]
-* [![JQuery][JQuery.com]][JQuery-url]
-* [![Express.js][Express.js]][Express.js-url]
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- GETTING STARTED -->
-## Getting Started
-
----
-
-This section provides instructions on how to set up Pineapple Fields locally.
-To get a local copy up and running follow these simple steps below.
-
-### Prerequisites
-
-Install npm and node.js in your local
-* The command below will install both npm and node.js
-  ```sh
-  npm install -g npm
-  ```
-
-### Installation
-
-_Below contains the instruction on how to download this repo and initalize in your local._
-
-1. Get your github token. [see details instruction on github](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token#creating-a-fine-grained-personal-access-token)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/FEC-Pina-Fraise-Frivolities/Atelier.git
-   ```
-3. Install dependencies
-   ```sh
-   npm install
-   ```
-4. Create `.env` file in the root directory
-5. Enter your github token in `.env`
-   ```js
-   AUTH = 'enter your github token'
-   PORT = 3000
-   ```
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-## Usage
-
----
-
-The project Pineapple Fields creates a template for developers who are interested in developing a simple e-commerce site. You can easily switch ```endpoint``` in `server/controller` folder so that the website will fetch data in your desired API. See below for an example
-
-```javascript
-const axios = require('axios');
-
-module.exports = {
-  getProducts(req, res) {
-    const endpoint = 'your API endpoint';
-    const option = {
-      method: 'GET',
-      url: endpoint,
-      headers: {
-        Authorization: process.env.AUTH,
-      },
-    };
-    axios(option)
-      .then((result) => {
-        res.send(result.data);
-      })
-      .catch((err) => console.log('server: get products failed', err));
-  },
-
-  getProduct(req, res) {
-    const { productId } = req.params;
-    const endpoint = 'your API endpoint';
-    const option = {
-      method: 'GET',
-      url: endpoint,
-      headers: {
-        Authorization: process.env.AUTH,
-      },
-    };
-    axios(option)
-      .then((result) => {
-        res.send(result.data);
-      })
-      .catch((err) => console.log('server: get product detail failed', err))
-      .finally(console.log('req params: ', req.params));
-  },
-
-  getProductStyle(req, res) {
-    const { productId } = req.params;
-    const endpoint = 'your API endpoint';
-    const option = {
-      method: 'GET',
-      url: endpoint,
-      headers: {
-        Authorization: process.env.AUTH,
-      },
-    };
-    axios(option)
-      .then((result) => {
-        res.send(result.data);
-      })
-      .catch((err) => console.log('server: get product style failed', err));
-  },
-
-  getRelated(req, res) {
-    const { productId } = req.params;
-    const endpoint = 'your API endpoint';
-    const option = {
-      method: 'GET',
-      url: endpoint,
-      headers: {
-        Authorization: process.env.AUTH,
-      },
-    };
-    axios(option)
-      .then((result) => {
-        res.send(result.data);
-      })
-      .catch((err) => console.log('server: get related list failed', err));
-  },
-};
-```
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- CONTRIBUTING -->
-## Contributing
-Welcomes contributions to our projects on Github. All types of contributions are encouraged and valued. Please make sure to read the relevant section before making your contribution. It will make it a lot easier for us maintainers and smooth out the experience for all involved. The we look forward to your contributions.
-
- And if you like the project, but just don't have time to contribute, that's fine. There are other easy ways to support the project and show your appreciation, which we would also be very happy about:
-- Star the project
-- Tweet about it
-- Refer this project in your project's readme
-- Mention the project at local meetups and tell your friends/colleagues
-
-I Want To Contribute
-> Legal Notice:
-> When contributing to this project, you must agree that you have authored 100% of the content, that you have the necessary rights to the content and that the content you contribute may be provided under the project license.
-
-
-Issues
-> Feel free to submit issues and enhancement requests.
-
-
-Step By Step
->Please refer to our project's style and contribution guidelines for submitting patches and additions. In general, we follow the "fork-and-pull" Git workflow.
-- Fork the repo on GitHub
-- Clone the project to your own machine
-- Commit changes to your own branch
-- Push your work back up to your fork
-- Submit a Pull request so that we can review your changes
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- ROADMAP -->
-## Roadmap
-
-- [ ] Add top navigation bar
-- [ ] Refactor to adhere to Airbnb's .eslintrc
-- [ ] Unify CSS styling
-- [ ] Dark Mode
-- [ ] Optimize to >80 performance score per Google Page Speed
-  - [ ] Reduce unused JS
-  - [ ] Minify CSS
-  - [ ] Minify JS
-  - [ ] Enable Text Compression
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- CONTACT -->
-## Authors
-
-*  Maximus Chen [github.com/HeyMaximus](https://github.com/HeyMaximus)
-*  Ruojia Liu [github.com/rul008](https://github.com/rul008)
-*  Milad Moulayi [github.com/MiladMoulayi](https://github.com/MiladMoulayi)
-*  Jay Zhang [github.com/gocodezhang](https://github.com/gocodezhang)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[product-overview-screenshot]: ./images/screenshot_ov.png
-[related-items-screenshot]: ./images/screenshot_ri.png
-[qs-and-as-screenshot]: ./images/screenshot_qa.png
-[ratings-and-reviews-screenshot]: ./images/screenshot_rr.png
-[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
-[React-url]: https://reactjs.org/
-[JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
-[JQuery-url]: https://jquery.com
-[Express.js]: https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB
-[Express.js-url]: https://expressjs.com/
+## Results
+Through implementing the above measures, the resultant API is highly performant and easily horizontally scaled. The results exceed the minimum metrics laid out in the Tasks section. Through this project, I've gained mastery over PostgreSQL, backend development principles, and testing tools like K6 and Loader.io.
